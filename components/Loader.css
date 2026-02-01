@@ -1,0 +1,108 @@
+.loader-container {
+  position: fixed;
+  inset: 0;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.typographic-wrapper {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  
+  /* Responsive font size */
+  font-size: clamp(32px, 9vw, 90px);
+  
+  /* FONT DI SISTEMA (Niente Inter) - Mantenuto Bold */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  
+  letter-spacing: -0.04em; 
+  color: white;
+  line-height: 1;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+.char-wrapper {
+  display: flex;
+  overflow: hidden;
+  align-items: baseline;
+}
+
+/* FIX: Margine negativo per l'ultima 'r' per incollarla al semicerchio */
+.typographic-wrapper > .char-wrapper:last-child {
+  margin-left: -0.06em;
+}
+
+.char {
+  display: inline-block;
+  transform: translateY(40px);
+  opacity: 0;
+}
+
+.word-separator {
+  display: inline-block;
+  height: 1em;
+  width: 0; 
+}
+
+/* SVG & Shapes Layout */
+.loader-container svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+.shape-slot {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  position: relative;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.shape-inner {
+  display: block;
+  transform-origin: center center;
+  height: 0.72em; 
+  width: 0.72em;
+  opacity: 0; 
+}
+
+/* --- CALIBRAZIONE FORME --- */
+
+/* 1. CROCE */
+.slot-cross {
+  width: 0.75em; 
+  margin: 0 0.05em; 
+}
+
+/* 2. QUADRATO */
+.slot-square {
+  width: 0.85em; 
+  margin-left: 0.04em;
+  margin-right: 0.04em;
+}
+
+/* Optical Fix: Scala 0.82 per bilanciare il peso visivo, Y leggermente alta */
+.slot-square .shape-inner {
+  transform: scale(0.82) translateY(-0.01em); 
+}
+
+/* 3. SEMICERCHIO */
+.slot-circle {
+  width: 0.72em;
+  margin-left: 0.08em; 
+  margin-right: 0.02em; 
+}
+
+.slot-circle .shape-inner {
+  transform: translateY(0.02em); 
+}

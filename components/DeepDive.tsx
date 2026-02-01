@@ -1,7 +1,9 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { BentoGrid } from './BentoGrid';
+import { BentoDisplay } from './BentoDisplay';
+import { BentoCNC } from './BentoCNC';
+import { BentoProductivity } from './BentoProductivity';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -9,34 +11,34 @@ const descriptionText = "The Knob / k\u2022no\u2022b\u20221 is a low-profile mec
 
 export const DeepDive: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || !triggerRef.current) return;
 
       const sections = gsap.utils.toArray(".panel", containerRef.current);
       const chars = gsap.utils.toArray(".panel-1-text .char", containerRef.current);
 
       const masterTl = gsap.timeline({
         scrollTrigger: {
-          trigger: ".deep-dive-container",
+          trigger: triggerRef.current,
           pin: true,
+          start: "top top",
           scrub: 1,
           end: "+=4000",
-          anticipatePin: 1, // Smooths pinning for mobile users who scroll quickly
+          anticipatePin: 1,
           invalidateOnRefresh: true,
         }
       });
 
       if (chars.length > 0) {
-        masterTl.fromTo(chars,
-          { color: "#1a1a1a" },
-          {
-            color: "#ffffff",
-            stagger: 0.02,
-            duration: 1,
-            ease: "none",
-          }
+        masterTl.to(chars, {
+          opacity: 1,
+          stagger: 0.02,
+          duration: 1,
+          ease: "none",
+        }
         );
       }
 
@@ -56,7 +58,7 @@ export const DeepDive: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full bg-black text-white overflow-hidden">
+    <div ref={containerRef} className="relative w-full bg-black text-white overflow-hidden z-30">
 
       {/* Scroll Down Hint */}
       <div className="absolute bottom-10 left-10 z-10 hidden md:block">
@@ -67,7 +69,7 @@ export const DeepDive: React.FC = () => {
       </div>
 
       {/* Main Container Pinned */}
-      <div className="deep-dive-container h-screen w-full flex flex-nowrap overflow-hidden">
+      <div ref={triggerRef} className="deep-dive-container h-screen w-full flex flex-nowrap overflow-hidden">
 
         {/* PANEL 1: Text Reveal */}
         <section className="panel min-w-[100vw] h-full flex flex-col justify-center items-center border-r border-white/5 relative bg-black z-10">
@@ -76,7 +78,7 @@ export const DeepDive: React.FC = () => {
               {descriptionText.split(" ").map((word, wIndex) => (
                 <span key={wIndex} className="inline-block mr-3 md:mr-4 whitespace-nowrap pb-1">
                   {word.split("").map((char, cIndex) => (
-                    <span key={cIndex} className="char inline-block text-[#1a1a1a]">{char}</span>
+                    <span key={cIndex} className="char inline-block text-white opacity-20">{char}</span>
                   ))}
                 </span>
               ))}
@@ -84,35 +86,19 @@ export const DeepDive: React.FC = () => {
           </div>
         </section>
 
-        {/* PANEL 2 - BENTOGRID */}
+        {/* PANEL 2 - DISPLAY */}
         <section className="panel min-w-[100vw] h-full flex justify-center items-center border-r border-white/5 bg-black relative">
-          <BentoGrid />
+          <BentoDisplay />
         </section>
 
-        {/* PANEL 3 */}
+        {/* PANEL 3 - CNC / ENGINEERING */}
         <section className="panel min-w-[100vw] h-full flex justify-center items-center border-r border-white/5 bg-black">
-          <div className="flex flex-col items-center justify-center max-w-2xl px-6">
-            <div className="mb-6 text-center">
-              <span className="font-mono text-[#FD7F18] text-sm uppercase tracking-widest">02. Engineering</span>
-              <h3 className="text-4xl md:text-6xl font-bold mt-4 uppercase">CNC Precision</h3>
-            </div>
-            <p className="text-gray-500 text-lg md:text-xl text-center leading-relaxed">
-              Milled from a solid block of aluminum. Anodized for a finish that is as durable as it is beautiful.
-            </p>
-          </div>
+          <BentoCNC />
         </section>
 
-        {/* PANEL 4 */}
+        {/* PANEL 4 - PRODUCTIVITY / CUSTOMIZATION */}
         <section className="panel panel-4 min-w-[100vw] h-full flex justify-center items-center bg-black relative">
-          <div className="flex flex-col items-center justify-center max-w-2xl px-6">
-            <div className="mb-6 text-center">
-              <span className="font-mono text-[#FD7F18] text-sm uppercase tracking-widest">03. Customization</span>
-              <h3 className="text-4xl md:text-6xl font-bold mt-4 uppercase">Make it Yours</h3>
-            </div>
-            <p className="text-gray-500 text-lg md:text-xl text-center leading-relaxed">
-              Support for QMK and VIA allows you to remap every key and rotation to fit your specific creative workflow perfectly.
-            </p>
-          </div>
+          <BentoProductivity />
         </section>
 
       </div>
